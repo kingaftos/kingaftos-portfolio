@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <base href="../" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Store manager — Futarian Home Deco</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="config.js"></script>
+    <script type="module" src="admin.js"></script>
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="/"
+        ><img src="assets/logo.webp" alt="" /><span
+          >FUTARIAN<small>STORE MANAGER</small></span
+        ></a
+      >
+      <nav>
+        <a class="secondary" href="/"
+          >View store</a
+        ><button id="logout" class="iconbtn" hidden>Sign out</button>
+      </nav>
+    </header>
+    <main class="admin-main">
+      <div id="mode" class="notice" hidden></div>
+      <section id="login-box" class="login" hidden>
+        <p class="eyebrow">YOUR SHOP, BEHIND THE SCENES</p>
+        <h1>Welcome back.</h1>
+        <p class="muted">Sign in to manage your products.</p>
+        <form id="login-form">
+          <label class="field"
+            >Email<input
+              type="email"
+              name="email"
+              autocomplete="username"
+              required /></label
+          ><label class="field"
+            >Password<input
+              type="password"
+              name="password"
+              autocomplete="current-password"
+              required
+              minlength="8"
+          /></label>
+          <p id="login-error" class="error" role="alert" hidden></p>
+          <button class="primary full">Sign in</button>
+        </form>
+        <p class="small muted">
+          Admin access is granted in Supabase. Customers never need an account.
+        </p>
+      </section>
+      <section id="manager" hidden>
+        <div class="admin-head">
+          <div>
+            <p class="eyebrow">FUTARIAN HOME DECO / OVERVIEW</p>
+            <h1>Your store, at a glance.</h1>
+            <p class="muted">
+              Good finds start here. Add, update and organise your collection.
+            </p>
+          </div>
+          <button class="primary" id="new-product">+ Add product</button>
+        </div>
+        <details class="banner-editor" id="banner-editor" hidden>
+          <summary>Homepage banner</summary>
+          <form id="banner-form">
+            <p>Switch back to the original banner or hide the banner without losing your last offer.</p>
+            <fieldset id="banner-fields" disabled>
+              <label class="field">Show on homepage
+                <select name="mode">
+                  <option value="original">Original room banner</option>
+                  <option value="campaign">Custom offer</option>
+                  <option value="hidden">No banner</option>
+                </select>
+              </label>
+              <label class="field">Offer title <input name="headline" maxlength="120" /></label>
+              <label class="field">Offer details <textarea name="description" maxlength="1200" rows="4" placeholder="Price and what’s included"></textarea></label>
+              <label class="field">New flyer (optional, JPG, PNG or WebP)
+                <input name="flyer" type="file" accept="image/jpeg,image/png,image/webp" />
+              </label>
+              <label class="field">Image description <input name="image_alt" maxlength="200" /></label>
+              <img id="banner-current-photo" alt="" hidden />
+              <label id="banner-remove-option" hidden><input name="remove" type="checkbox" /> Remove current flyer</label>
+              <div class="banner-actions">
+                <button class="primary" type="submit">Save banner</button>
+              </div>
+            </fieldset>
+            <button class="secondary" id="banner-reload" type="button">Reload banner settings</button>
+            <p id="banner-status" role="status" aria-live="polite"></p>
+          </form>
+        </details>
+        <div class="stats">
+          <div class="stat"><strong id="total">0</strong>Products</div>
+          <div class="stat"><strong id="published">0</strong>Published</div>
+          <div class="stat">
+            <strong id="lowstock">0</strong>Low / out of stock
+          </div>
+        </div>
+        <div class="admin-tools">
+          <input
+            type="search"
+            id="admin-search"
+            aria-label="Search catalogue"
+            placeholder="Find a product…"
+          /><select id="admin-filter" aria-label="Filter visibility">
+            <option value="all">All products</option>
+            <option value="published">Published</option>
+            <option value="draft">Drafts</option></select
+          ><button class="secondary" id="refresh">Refresh</button>
+        </div>
+        <p id="admin-error" class="error" role="alert" hidden></p>
+        <div id="admin-products" class="admin-table"></div>
+        <div class="helpbox">
+          <strong>How publishing works</strong><br />Drafts are visible only to
+          admins. Published products appear in the customer catalogue on its
+          next load. Stock of zero prevents adding to cart. Leaving the regular price
+          blank lets customers request a quote. Tags help search; separate them
+          with commas. Product edits do not reserve stock or record a sale:
+          agree payment and delivery on WhatsApp, then update stock here.
+        </div>
+      </section>
+    </main>
+    <dialog id="editor" class="detail editor">
+      <div class="dialoghead">
+        <h2 id="editor-title">Add product</h2>
+        <button class="iconbtn" data-close aria-label="Close editor">✕</button>
+      </div>
+      <form id="product-form">
+        <input type="hidden" name="id" />
+        <div class="form-grid">
+          <label class="field wide"
+            >Product name<input name="name" required maxlength="120" /></label
+          ><label class="field"
+            >Category<select
+              name="category"
+              id="editor-category"
+            ></select></label
+          ><label class="field"
+            >Condition<select name="condition">
+              <option>New</option>
+              <option>Used</option>
+              <option>Made to order</option>
+            </select></label
+          ><label class="field"
+            >Regular price (₦) · blank for a quote<input
+              name="price"
+              type="number"
+              min="1"
+              max="1000000000"
+              step="1" /></label
+          ><label class="field"
+            >Promo price (₦) · optional<input
+              name="promo_price"
+              type="number"
+              min="1"
+              max="999999999"
+              step="1"
+              aria-describedby="promo-price-hint" />
+            <span id="promo-price-hint" class="small muted">Enter less than the regular price. Clear this field to end the promo.</span></label
+          ><label class="field"
+            >Stock / available order slots<input
+              name="stock"
+              type="number"
+              required
+              min="0"
+              max="99999"
+              step="1"
+              value="1" /></label
+          ><label class="field"
+            >Material<input
+              name="material"
+              maxlength="160"
+              placeholder="e.g. Plywood, oak finish" /></label
+          ><label class="field"
+            >Dimensions<input
+              name="dimensions"
+              maxlength="160"
+              placeholder="e.g. 90 × 45 × 180 cm" /></label
+          ><label class="field wide"
+            >Description<textarea
+              name="description"
+              required
+              maxlength="5000"
+              rows="4"
+              placeholder="Describe what is included, sizes, colours and any useful details."
+            ></textarea></label
+          ><label class="field wide"
+            >Search tags<input
+              name="tags"
+              maxlength="1000"
+              placeholder="wardrobe, wooden, clothes, student, storage"
+          /></label>
+          <div class="wide">
+            <label class="field"
+              >Product photos · up to 6<input
+                id="upload"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                multiple
+            /></label>
+            <p class="small muted">
+              JPG, PNG or WebP, up to 5 MB each. First photo is the cover.
+              Photos are resized to 1200px. Save the product after uploading.
+            </p>
+            <div id="image-list" class="image-list"></div>
+            <label id="url-field" class="field"
+              >Demo only: HTTPS photo URL<input
+                type="url"
+                id="photo-url"
+                placeholder="https://…" /></label
+            ><button type="button" class="textlink" id="add-url">
+              Add photo URL
+            </button>
+          </div>
+          <label class="field"
+            >Visibility<select name="status">
+              <option value="draft">Draft</option>
+              <option value="published">Published</option>
+            </select></label
+          ><label class="checklabel"
+            ><input type="checkbox" name="featured" /> Feature this
+            product</label
+          >
+        </div>
+        <p id="save-error" class="error" role="alert" hidden></p>
+        <div class="buttonrow">
+          <button id="save" class="primary" type="submit">Save product</button
+          ><button class="secondary" type="button" data-close>Cancel</button>
+        </div>
+      </form>
+    </dialog>
+    <div id="toast" class="toast" role="status"></div>
+  </body>
+</html>

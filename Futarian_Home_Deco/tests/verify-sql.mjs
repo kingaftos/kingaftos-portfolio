@@ -1,0 +1,22 @@
+import {PGlite} from '@electric-sql/pglite';
+import fs from 'node:fs/promises';
+const db=new PGlite();
+await db.exec(`create role anon nologin;create role authenticated nologin;
+create schema auth;create table auth.users(id uuid primary key);
+create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$;
+create schema storage;create table storage.buckets(id text primary key,name text,public boolean,file_size_limit bigint,allowed_mime_types text[]);
+create table storage.objects(id uuid primary key default gen_random_uuid(),bucket_id text references storage.buckets(id),name text);
+alter table storage.objects enable row level security;
+grant usage on schema public,auth,storage to anon,authenticated;
+grant select,insert,update,delete on storage.objects to anon,authenticated;
+insert into auth.users values ('aa111111-1111-4111-8111-111111111111');`);
+const root=new URL('../',import.meta.url).pathname;
+await db.exec(await fs.readFile(root+'supabase/setup.sql','utf8'));
+await db.exec(`insert into public.admin_users values ('aa111111-1111-4111-8111-111111111111');`);
+const r=await db.exec(await fs.readFile(root+'supabase/verify-rls.sql','utf8'));
+console.log(r.at(-1).rows);
+// Additional storage policy checks under the same Postgres RLS engine.
+await db.exec(`begin;set local role anon;do $$ begin begin insert into storage.objects(bucket_id,name) values('product-images','denied.jpg');raise exception 'FAIL anon upload';exception when insufficient_privilege then null;end;end $$;reset role;rollback;`);
+await db.exec(`begin;set local role authenticated;select set_config('request.jwt.claim.sub','aa111111-1111-4111-8111-111111111111',true);insert into storage.objects(bucket_id,name) values('product-images','allowed.jpg');reset role;rollback;`);
+console.log('PASS: setup SQL executes; anonymous uploads denied; admin uploads permitted.');
+await db.close();

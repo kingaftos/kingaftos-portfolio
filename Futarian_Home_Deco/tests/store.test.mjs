@@ -1,0 +1,10 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {matches,checkoutMessage,safeUrl,escapeHTML} from '../dist/core.mjs';
+const p={id:'p1',name:'Wooden wardrobe',description:'Compact clothes storage for a bedroom',category:'Furniture',tags:['plywood','rack'],price:25000};
+test('search finds words anywhere, multiple words, tags and hashtags',()=>{for(const q of ['BEDROOM','clothes','wood rack','#plywood','ward'])assert.ok(matches(p,q),q);assert.ok(!matches(p,'kettle'));assert.ok(matches(p,'wood kettle'));assert.ok(matches(p,''));});
+test('checkout includes quantities, correct totals and delivery confirmation',()=>{const m=checkoutMessage([{product:p,qty:2}],'Please deliver to FUTA');assert.match(m,/× 2/);assert.match(m,/50,000/);assert.match(m,/delivery timing before payment/);assert.match(m,/FUTA/);});
+test('quote products are never represented as free',()=>{const m=checkoutMessage([{product:{...p,price:null},qty:1}]);assert.match(m,/Please quote/);assert.match(m,/awaiting a quote/);});
+test('demo enquiries are labelled',()=>assert.match(checkoutMessage([{product:p,qty:1}],'',true),/DEMO ENQUIRY/));
+test('HTML and dangerous URL injection are rejected',()=>{assert.equal(escapeHTML('<img onerror="x">'),'&lt;img onerror=&quot;x&quot;&gt;');assert.equal(safeUrl('javascript:alert(1)'),'');assert.equal(safeUrl('data:text/html,bad'),'');assert.equal(safeUrl(''),'');assert.equal(safeUrl('https://example.com/a'),'https://example.com/a');});
+
+test('sorting applies after search',async()=>{const {sortProducts}=await import('../dist/core.mjs');const list=[{...p,price:90000},{...p,id:'p2',price:15000},{...p,id:'p3',price:45000}].filter(x=>matches(x,'wood'));assert.deepEqual(sortProducts(list,'low').map(x=>x.price),[15000,45000,90000]);assert.deepEqual(sortProducts(list,'high').map(x=>x.price),[90000,45000,15000]);});
+test('configured social links are revealed and invalid links are hidden',async()=>{const {socialLinks}=await import('../dist/core.mjs');assert.deepEqual(socialLinks({instagram:'',tiktok:''}),[]);assert.deepEqual(socialLinks({instagram:'https://instagram.com/store',tiktok:'javascript:bad'}),['instagram']);});

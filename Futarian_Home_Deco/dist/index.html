@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#fff8ed" />
+    <meta
+      name="description"
+      content="Furniture, appliances and thoughtful finishing touches for your room. Shop Futarian Home Deco in Akure and enquire on WhatsApp."
+    />
+    <meta property="og:title" content="Futarian Home Deco" />
+<meta property="og:description" content="Room essentials in Akure. Browse and enquire on WhatsApp." />
+<meta property="og:type" content="website" />
+   <meta property="og:url" content="https://futarian-home-deco.netlify.app/" />
+<meta property="og:image" content="https://futarian-home-deco.netlify.app/assets/futarian-link-preview.jpg" />
+<meta property="og:image:type" content="image/jpeg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Futarian Home Deco logo beside a furnished student room" />
+    <title>Futarian Home Deco — Make room for home</title>
+    <link rel="icon" href="assets/favicon.png" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="config.js"></script>
+    <script type="module" src="store.js"></script>
+    <script type="module" src="banner-store.js"></script>
+  </head>
+  <body>
+    <a class="skip" href="#catalogue">Skip to products</a>
+    <header>
+      <a class="brand" href="index.html"
+        ><img src="assets/logo.webp" alt="" /><span
+          >FUTARIAN<small>HOME DECO</small></span
+        ></a
+      >
+      <form class="search" role="search">
+        <label class="sr" for="search">Search products</label
+        ><span aria-hidden="true">⌕</span
+        ><input
+          id="search"
+          type="search"
+          placeholder="Try ‘wooden chair’ or ‘duvet’…"
+        /><kbd>Search</kbd>
+      </form>
+      <nav>
+        <button class="iconbtn" id="wishlist" aria-label="Open wishlist">
+          ♡ <span class="desktop">Wishlist</span
+          ><b id="wish-count">0</b></button
+        ><button class="iconbtn" id="cart" aria-label="Open cart">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            aria-hidden="true"
+          >
+            <path
+              d="M3 3h2l2 12h12l2-9H6M9 21h.01M18 21h.01"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <circle cx="9" cy="20" r="1" />
+            <circle cx="18" cy="20" r="1" />
+          </svg>
+          <span class="desktop">Cart</span><b id="cart-count">0</b>
+        </button>
+      </nav>
+    </header>
+    <div id="demo-banner" class="demo" hidden>
+      Preview catalogue · Sample products and prices. Real stock will appear
+      when the store is connected.
+    </div>
+    <div class="layout">
+      <aside class="sidebar">
+        <p class="eyebrow">YOUR ROOM, SORTED</p>
+        <h2>Shop by category</h2>
+        <nav id="categories"></nav>
+        <div class="sidebar-note">
+          <span>✳</span>
+          <h3>Have something<br />else in mind?</h3>
+          <p>
+            Send a picture or tell us what you need. We’ll help you find it.
+          </p>
+          <a class="textlink" id="request-link" target="_blank" rel="noopener"
+            >Request an item ↗</a
+          >
+        </div>
+        <a class="small muted" href="policies.html#delivery"
+          >Delivery & ordering ↗</a
+        >
+      </aside>
+      <main>
+        <section class="hero" id="original-banner">
+          <div class="hero-copy">
+            <p class="eyebrow">FOR NEW ROOMS & FRESH STARTS</p>
+            <h1>Make your room<br />feel like home<span>.</span></h1>
+            <p>
+              Furniture, bedding, appliances and décor for your space. Browse,
+              save your picks, and ask us on WhatsApp.
+            </p>
+            <a href="#catalogue" class="primary"
+              >Find your room essentials <span>↗</span></a
+            >
+            <div class="hero-foot">
+              <span>Furniture</span><i>·</i><span>Appliances</span><i>·</i
+              ><span>Home comforts</span>
+            </div>
+          </div>
+          <div class="hero-photo">
+            <img
+              src="assets/room.webp"
+              alt="A calm bedroom with warm wooden furniture and neutral bedding"
+              fetchpriority="high"
+            />
+            <div class="photo-label">
+              A space to call your own.<small
+                >Room inspiration · items sold separately</small
+              >
+            </div>
+          </div>
+        </section>
+        <section class="hero campaign-banner" id="campaign-banner" hidden aria-labelledby="campaign-title">
+          <div class="hero-copy">
+            <h1 id="campaign-title"></h1>
+            <p id="campaign-description"></p>
+            <a class="primary" id="campaign-whatsapp" target="_blank" rel="noopener" hidden>Ask about this bundle on WhatsApp</a>
+          </div>
+          <a class="campaign-photo" id="campaign-photo" target="_blank" rel="noopener" aria-label="Open full-size flyer (new tab)" hidden>
+            <img id="campaign-image" alt="" />
+          </a>
+        </section>
+        <div class="trust">
+          <span><b>01</b> Browse without signing up</span
+          ><span><b>02</b> Confirm everything on WhatsApp</span
+          ><span><b>03</b> Pay by transfer after confirmation</span>
+        </div>
+        <section id="spotlight" class="spotlight" hidden aria-labelledby="spotlight-title">
+          <p class="eyebrow">LIGHTING &amp; CHANDELIERS</p>
+          <h2 id="spotlight-title">Chandelier & lighting spotlight</h2>
+          <p>Explore lighting for your room. Ask about dimensions, fittings and installation before buying.</p>
+          <div id="spotlight-products" class="product-grid"></div>
+        </section>
+        <section id="catalogue">
+          <div class="sectionhead">
+            <div>
+              <p class="eyebrow">GOOD FINDS FOR YOUR EVERYDAY</p>
+              <h2 id="catalogue-title">Make yourself at home</h2>
+              <p id="result-count" class="muted" aria-live="polite">
+                Loading products…
+              </p>
+            </div>
+            <label class="sort"
+              >Sort by
+              <select id="sort">
+                <option value="new">Best match / newest</option>
+                <option value="low">Price: low to high</option>
+                <option value="high">Price: high to low</option>
+                <option value="name">Name: A–Z</option>
+              </select></label
+            >
+          </div>
+          <div class="filterrow">
+            <label
+              ><input type="checkbox" id="available" /> Available items
+              only</label
+            ><label
+              >Budget
+              <select id="budget">
+                <option value="all">Any price</option>
+                <option value="25000">Under ₦25,000</option>
+                <option value="50000">Under ₦50,000</option>
+                <option value="100000">Under ₦100,000</option>
+              </select></label
+            ><button id="reset" class="textlink">Clear filters</button>
+          </div>
+          <div id="products" class="product-grid" aria-live="polite"></div>
+          <button id="loadmore" class="secondary" hidden>
+            Show more products
+          </button>
+        </section>
+        <section class="request-banner">
+          <div>
+            <p class="eyebrow">CAN’T FIND YOUR PERFECT FIT?</p>
+            <h2>Tell us what you need.<br />We’ll find it.</h2>
+            <p>
+              A wardrobe, a particular mirror, or a whole room’s worth of ideas.
+            </p>
+          </div>
+          <a id="request-bottom" class="primary" target="_blank" rel="noopener"
+            >Request an item ↗</a
+          >
+        </section>
+        <section class="how">
+          <h2>A simple way to shop</h2>
+          <div>
+            <article>
+              <b>1 / MAKE YOUR PICKS</b>
+              <p>Add your favourites to your cart or save them for later.</p>
+            </article>
+            <article>
+              <b>2 / LET’S TALK</b>
+              <p>
+                Your cart becomes a WhatsApp message. We confirm stock, delivery
+                and your total.
+              </p>
+            </article>
+            <article>
+              <b>3 / MAKE IT HOME</b>
+              <p>
+                Pay by bank transfer after confirmation. We arrange the next
+                steps with you.
+              </p>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+    <footer>
+      <a class="brand" href="index.html"
+        ><span>FUTARIAN<small>HOME DECO</small></span></a
+      >
+      <p>
+        Home essentials for FUTA students.<br /><span class="muted"
+          >Akure, Ondo State, Nigeria</span
+        >
+      </p>
+      <div>
+        <a href="policies.html#terms">Terms</a><a href="policies.html#privacy">Privacy</a
+        ><a href="policies.html#returns">Returns & refunds</a
+        ><a href="policies.html#delivery">Delivery & FAQs</a
+        ><a href="admin/">Admin</a>
+      </div>
+      <div id="socials"></div>
+      <small>© <span id="year"></span> Futarian Home Deco</small>
+    </footer>
+    <dialog aria-labelledby="drawer-title" id="drawer" class="drawer">
+      <div class="dialoghead">
+        <h2 id="drawer-title"></h2>
+        <button class="iconbtn" data-close aria-label="Close panel">✕</button>
+      </div>
+      <div id="drawer-body"></div>
+    </dialog>
+    <dialog aria-label="Product details" id="detail" class="detail">
+      <button class="close iconbtn" data-close aria-label="Close product">
+        ✕
+      </button>
+      <div id="detail-body"></div>
+    </dialog>
+    <div id="toast" class="toast" role="status"></div>
+  </body>
+</html>
